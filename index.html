@@ -1,126 +1,122 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>三高蔬果有福 — 合作診所查詢系統</title>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: "Noto Sans TC", "Microsoft JhengHei", "PingFang TC", sans-serif;
-      background: #f0f4f8;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      color: #1a2e45;
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{
+      font-family:"Noto Sans TC","Microsoft JhengHei","PingFang TC",sans-serif;
+      background:#f0f4f8;min-height:100vh;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      padding:24px;color:#1a2e45;
     }
+    .brand{text-align:center;margin-bottom:32px;}
+    .brand-icon{font-size:48px;line-height:1;margin-bottom:8px;}
+    .brand h1{font-size:22px;font-weight:700;color:#1a6b3c;letter-spacing:1px;}
+    .brand p{font-size:13px;color:#6b7a8d;margin-top:4px;}
 
-    .brand {
-      text-align: center;
-      margin-bottom: 32px;
+    .card{
+      background:#fff;border-radius:16px;
+      box-shadow:0 4px 24px rgba(0,0,0,.08);
+      padding:36px 40px;width:100%;max-width:480px;
     }
-    .brand-icon { font-size: 48px; line-height: 1; margin-bottom: 8px; }
-    .brand h1 { font-size: 22px; font-weight: 700; color: #1a6b3c; letter-spacing: 1px; }
-    .brand p  { font-size: 13px; color: #6b7a8d; margin-top: 4px; }
+    .card h2{font-size:16px;font-weight:700;margin-bottom:20px;color:#1a2e45;
+              display:flex;align-items:center;gap:8px;}
+    .card h2 span.icon{font-size:20px;}
 
-    .card {
-      background: #fff;
-      border-radius: 16px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-      padding: 36px 40px;
-      width: 100%;
-      max-width: 480px;
+    label{display:block;font-size:13px;font-weight:600;color:#4a5568;margin-bottom:6px;}
+    input[type="text"]{
+      width:100%;padding:11px 14px;
+      border:1.5px solid #d1d9e0;border-radius:8px;
+      font-size:15px;font-family:inherit;
+      transition:border-color .2s,box-shadow .2s;
+      outline:none;color:#1a2e45;
     }
-    .card h2 {
-      font-size: 16px; font-weight: 700; margin-bottom: 20px;
-      color: #1a2e45; display: flex; align-items: center; gap: 8px;
+    input:focus{border-color:#2d8a5e;box-shadow:0 0 0 3px rgba(45,138,94,.15);}
+
+    .btn{
+      margin-top:16px;width:100%;padding:12px;
+      background:#2d8a5e;color:#fff;
+      font-size:15px;font-weight:700;border:none;
+      border-radius:8px;cursor:pointer;letter-spacing:.5px;
+      transition:background .2s,transform .1s;
     }
-    .card h2 span.icon { font-size: 20px; }
+    .btn:hover{background:#236e4a;}
+    .btn:active{transform:scale(.98);}
 
-    label { display: block; font-size: 13px; font-weight: 600; color: #4a5568; margin-bottom: 6px; }
-
-    input[type="password"], input[type="text"] {
-      width: 100%; padding: 11px 40px 11px 14px;
-      border: 1.5px solid #d1d9e0; border-radius: 8px;
-      font-size: 15px; font-family: inherit;
-      transition: border-color .2s, box-shadow .2s;
-      outline: none; color: #1a2e45;
-    }
-    input:focus { border-color: #2d8a5e; box-shadow: 0 0 0 3px rgba(45,138,94,.15); }
-
-
-    .btn {
-      margin-top: 16px; width: 100%; padding: 12px;
-      background: #2d8a5e; color: #fff;
-      font-size: 15px; font-weight: 700; border: none;
-      border-radius: 8px; cursor: pointer; letter-spacing: .5px;
-      transition: background .2s, transform .1s;
-    }
-    .btn:hover  { background: #236e4a; }
-    .btn:active { transform: scale(.98); }
-
-    .msg {
-      margin-top: 14px; padding: 10px 14px; border-radius: 8px;
-      font-size: 13px; font-weight: 500; display: none;
-    }
-    .msg.error   { background: #fff0f0; color: #c0392b; border: 1px solid #f5c6c6; }
-    .msg.info    { background: #fffbe6; color: #7d6200; border: 1px solid #ffe58f; }
+    .msg{margin-top:14px;padding:10px 14px;border-radius:8px;
+          font-size:13px;font-weight:500;display:none;}
+    .msg.error{background:#fff0f0;color:#c0392b;border:1px solid #f5c6c6;}
 
     /* 結果卡片 */
-    #result-card { display: none; max-width: 560px; }
-
-    .clinic-header {
-      display: flex; align-items: flex-start;
-      justify-content: space-between; flex-wrap: wrap;
-      gap: 8px; margin-bottom: 24px;
-      padding-bottom: 16px; border-bottom: 1.5px solid #e8ecf0;
+    #result-card{display:none;max-width:560px;}
+    .clinic-header{
+      display:flex;align-items:flex-start;justify-content:space-between;
+      flex-wrap:wrap;gap:8px;margin-bottom:24px;
+      padding-bottom:16px;border-bottom:1.5px solid #e8ecf0;
     }
-    .clinic-name     { font-size: 20px; font-weight: 800; color: #1a6b3c; }
-    .clinic-location { font-size: 13px; color: #6b7a8d; margin-top: 4px; }
-    .badge {
-      display: inline-flex; align-items: center; gap: 4px;
-      background: #e8f5ee; color: #1a6b3c;
-      font-size: 12px; font-weight: 600;
-      padding: 4px 10px; border-radius: 20px;
+    .clinic-name{font-size:20px;font-weight:800;color:#1a6b3c;}
+    .clinic-location{font-size:13px;color:#6b7a8d;margin-top:4px;}
+    .badge{
+      display:inline-flex;align-items:center;gap:4px;
+      background:#e8f5ee;color:#1a6b3c;
+      font-size:12px;font-weight:600;padding:4px 10px;border-radius:20px;
     }
 
-    .stats-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;
+    /* 三欄統計卡 */
+    .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:8px;}
+    .stat-box{
+      background:#f7faf8;border:1px solid #e0ece6;
+      border-radius:10px;padding:14px 10px;text-align:center;
     }
-    .stat-box {
-      background: #f7faf8; border: 1px solid #e0ece6;
-      border-radius: 10px; padding: 14px 10px; text-align: center;
+    .stat-box.pending{background:#f3f5f7;border-color:#dce3ea;}
+    .stat-num{font-size:26px;font-weight:800;color:#2d8a5e;line-height:1;}
+    .stat-box.pending .stat-num{font-size:14px;color:#8a9bb0;padding-top:4px;}
+    .stat-label{font-size:11px;color:#6b7a8d;margin-top:5px;line-height:1.4;}
+    .stat-box.pending .stat-label{color:#8a9bb0;}
+    .stat-note{font-size:10px;color:#9aacbb;margin-top:3px;line-height:1.3;}
+
+    /* 排名區塊 */
+    .rank-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:14px;}
+    .rank-section{
+      background:#f7faf8;border:1px solid #e0ece6;
+      border-radius:10px;padding:12px;
     }
-    .stat-box .stat-num   { font-size: 28px; font-weight: 800; color: #2d8a5e; line-height: 1; }
-    .stat-box .stat-label { font-size: 11px; color: #6b7a8d; margin-top: 5px; line-height: 1.4; }
-    .stat-box.pending .stat-num   { color: #aaa; font-size: 18px; }
-    .stat-box.pending .stat-label { color: #bbb; }
-
-    .ratio-section { margin-top: 4px; }
-    .ratio-section h3 { font-size: 13px; font-weight: 700; color: #4a5568; margin-bottom: 10px; }
-    .ratio-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-    .ratio-row label { width: 90px; font-size: 12px; color: #6b7a8d; margin: 0; flex-shrink: 0; }
-    .ratio-bar-wrap { flex: 1; background: #e8ecf0; border-radius: 100px; height: 10px; overflow: hidden; }
-    .ratio-bar { height: 100%; border-radius: 100px; background: linear-gradient(90deg, #2d8a5e, #4eca88); transition: width .8s ease; min-width: 2px; }
-    .ratio-val { font-size: 13px; font-weight: 700; color: #2d8a5e; width: 48px; text-align: right; }
-
-    .btn-ghost {
-      margin-top: 20px; width: 100%; padding: 10px;
-      background: transparent; color: #2d8a5e;
-      font-size: 14px; font-weight: 600;
-      border: 1.5px solid #2d8a5e; border-radius: 8px;
-      cursor: pointer; transition: background .2s;
+    .rank-title{font-size:11px;font-weight:700;color:#4a5568;margin-bottom:8px;}
+    .rank-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;}
+    .rank-label{font-size:11px;color:#6b7a8d;}
+    .rank-val{
+      font-size:16px;font-weight:800;color:#2d8a5e;
+      background:#e8f5ee;padding:2px 10px;border-radius:20px;
     }
-    .btn-ghost:hover { background: #f0fff6; }
+    .rank-val.na{color:#aaa;background:#f0f0f0;font-size:12px;padding:3px 8px;}
 
-    footer { margin-top: 28px; font-size: 12px; color: #a0aab4; text-align: center; }
+    /* footnote */
+    .footnote{
+      margin-top:20px;padding:12px 14px;
+      background:#fffbe6;border:1.5px solid #ffe58f;
+      border-radius:8px;font-size:12px;color:#6b4c00;line-height:1.7;
+    }
+    .footnote a{color:#1a6b3c;font-weight:600;text-decoration:none;}
+    .footnote a:hover{text-decoration:underline;}
 
-    @media (max-width: 480px) {
-      .card { padding: 28px 22px; }
+    .btn-ghost{
+      margin-top:16px;width:100%;padding:10px;
+      background:transparent;color:#2d8a5e;
+      font-size:14px;font-weight:600;
+      border:1.5px solid #2d8a5e;border-radius:8px;
+      cursor:pointer;transition:background .2s;
+    }
+    .btn-ghost:hover{background:#f0fff6;}
+
+    footer{margin-top:28px;font-size:12px;color:#a0aab4;text-align:center;line-height:1.8;}
+    footer a{color:#2d8a5e;font-weight:600;text-decoration:none;}
+
+    @media(max-width:480px){
+      .card{padding:28px 22px;}
+      .stats-grid{grid-template-columns:1fr 1fr;}
     }
   </style>
 </head>
@@ -136,7 +132,7 @@
   <div class="card" id="login-card">
     <h2><span class="icon">🔒</span>請輸入查詢密碼</h2>
     <label for="pwd-input">系統密碼</label>
-    <input type="text" id="pwd-input" placeholder="請輸入密碼" autocomplete="off" />
+    <input type="text" id="pwd-input" placeholder="請輸入密碼" autocomplete="off"/>
     <button class="btn" onclick="checkPassword()">驗證進入</button>
     <div class="msg error" id="pwd-error">密碼錯誤，請重新輸入。</div>
   </div>
@@ -146,8 +142,8 @@
     <h2><span class="icon">🔍</span>診所進度查詢</h2>
     <label for="clinic-input">請輸入您的診所名稱</label>
     <input type="text" id="clinic-input" placeholder="例：千禧診所 或 千禧" autocomplete="off"
-           onkeydown="if(event.key==='Enter') searchClinic()" />
-    <button class="btn" onclick="searchClinic()">查詢我的進度</button>
+           onkeydown="if(event.key==='Enter') searchClinic()"/>
+    <button class="btn" onclick="searchClinic()">查詢</button>
     <div class="msg error" id="not-found">
       查無此診所。如有疑問，請聯繫計畫窗口。
     </div>
@@ -163,53 +159,84 @@
       <div class="badge">✅ 查詢成功</div>
     </div>
 
+    <!-- 統計三欄 -->
     <div class="stats-grid">
       <div class="stat-box">
-        <div class="stat-num"   id="res-enrolled">—</div>
-        <div class="stat-label">累積<br/>參加人數</div>
+        <div class="stat-num" id="res-enrolled">—</div>
+        <div class="stat-label">累積參與人數</div>
+        <div class="stat-note">院所任務卡上傳人數</div>
       </div>
       <div class="stat-box">
-        <div class="stat-num"   id="res-checked">—</div>
-        <div class="stat-label">完成檢查<br/>領蔬果券人數</div>
+        <div class="stat-num" id="res-checked">—</div>
+        <div class="stat-label">① 完成診所檢查人數</div>
+        <div class="stat-note">成功發出領蔬果券人數</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num" id="res-nutrition">—</div>
+        <div class="stat-label">② 完成營養學習人數</div>
+        <div class="stat-note">完成線上營養評估人數</div>
       </div>
       <div class="stat-box" id="box-improved">
-        <div class="stat-num"   id="res-improved">—</div>
-        <div class="stat-label">指標改善<br/>領蔬果券人數</div>
-      </div>
-      <div class="stat-box" style="background:#f0f4f8; border-color:#dce3ea;">
-        <div class="stat-num" style="font-size:13px; color:#8a9bb0; padding-top:4px;">統計中</div>
-        <div class="stat-label" style="color:#8a9bb0; margin-top:6px;">2026年改善資料<br/>尚未統計</div>
+        <div class="stat-num" id="res-improved">—</div>
+        <div class="stat-label">③ 完成指標改善人數</div>
+        <div class="stat-note">成功發出領蔬果券人數</div>
       </div>
     </div>
 
-    <div class="ratio-section">
-      <h3>📊 占比分析（依參加人數）</h3>
-      <div class="ratio-row">
-        <label>縣市占比</label>
-        <div class="ratio-bar-wrap"><div class="ratio-bar" id="bar-city" style="width:0%"></div></div>
-        <div class="ratio-val" id="res-city-ratio">—</div>
+    <!-- 排名區塊 -->
+    <div class="rank-grid">
+      <div class="rank-section">
+        <div class="rank-title">🏥 ① 診所檢查 排名</div>
+        <div class="rank-row">
+          <span class="rank-label">縣市排名</span>
+          <span class="rank-val" id="rank-check-city">—</span>
+        </div>
+        <div class="rank-row">
+          <span class="rank-label">全國排名</span>
+          <span class="rank-val" id="rank-check-national">—</span>
+        </div>
       </div>
-      <div class="ratio-row">
-        <label>全國占比</label>
-        <div class="ratio-bar-wrap"><div class="ratio-bar" id="bar-national" style="width:0%"></div></div>
-        <div class="ratio-val" id="res-national-ratio">—</div>
+      <div class="rank-section">
+        <div class="rank-title">🥗 ② 營養學習 排名</div>
+        <div class="rank-row">
+          <span class="rank-label">縣市排名</span>
+          <span class="rank-val" id="rank-nut-city">—</span>
+        </div>
+        <div class="rank-row">
+          <span class="rank-label">全國排名</span>
+          <span class="rank-val" id="rank-nut-national">—</span>
+        </div>
       </div>
+      <div class="rank-section">
+        <div class="rank-title">📈 ③ 指標改善 排名</div>
+        <div class="rank-row">
+          <span class="rank-label">縣市排名</span>
+          <span class="rank-val" id="rank-imp-city">—</span>
+        </div>
+        <div class="rank-row">
+          <span class="rank-label">全國排名</span>
+          <span class="rank-val" id="rank-imp-national">—</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- footnote -->
+    <div class="footnote">
+      📅 資料統計至 <strong>2026/06/03</strong><br/>
+      📊 縣市占比：<span id="res-city-ratio">—</span>　全國占比：<span id="res-national-ratio">—</span><br/>
+      ❓ 若有疑問請聯繫活動 LINE：<a href="https://line.me/R/ti/p/@835pufzk" target="_blank">@835pufzk</a>
     </div>
 
     <button class="btn-ghost" onclick="resetSearch()">🔄 重新查詢</button>
   </div>
 
   <footer>
-    資料統計至 2026/05/25 &nbsp;·&nbsp; 僅供計畫內診所內部使用<br/>
-    若有疑問請聯繫活動 LINE&nbsp;
-    <a href="https://line.me/R/ti/p/@835pufzk" target="_blank"
-       style="color:#2d8a5e; font-weight:600; text-decoration:none;">@835pufzk</a>
+    資料統計至 2026/06/03 &nbsp;·&nbsp; 僅供計畫內診所內部使用<br/>
+    若有疑問請聯繫活動 LINE&nbsp;<a href="https://line.me/R/ti/p/@835pufzk" target="_blank">@835pufzk</a>
   </footer>
 
   <script>
     const CORRECT_PASSWORD = "1000love";
-
-    // ── 資料直接內嵌，不需讀取外部檔案 ──
     const CLINIC_DATA = [
   {
     "診所名稱": "宜蘭縣三星鄉衛生所",
@@ -217,19 +244,33 @@
     "區域": "三星鄉",
     "累積參加人數": 1,
     "累積完成檢查並領蔬果券人數": 1,
+    "檢查_縣市排名": 2,
+    "檢查_全國排名": 24,
+    "完成營養學習人數": 0,
+    "營養_縣市排名": 2,
+    "營養_全國排名": 36,
     "累積完成指標改善並領蔬果券人數": 0,
-    "該縣市占比": 5.88,
-    "全國占比": 0.31
+    "改善_縣市排名": 1,
+    "改善_全國排名": 6,
+    "該縣市占比": 4.35,
+    "全國占比": 0.24
   },
   {
     "診所名稱": "村却診所",
     "縣市": "宜蘭縣",
     "區域": "羅東鎮",
-    "累積參加人數": 16,
-    "累積完成檢查並領蔬果券人數": 14,
+    "累積參加人數": 22,
+    "累積完成檢查並領蔬果券人數": 20,
+    "檢查_縣市排名": 1,
+    "檢查_全國排名": 5,
+    "完成營養學習人數": 20,
+    "營養_縣市排名": 1,
+    "營養_全國排名": 5,
     "累積完成指標改善並領蔬果券人數": 0,
-    "該縣市占比": 94.12,
-    "全國占比": 5.0
+    "改善_縣市排名": 1,
+    "改善_全國排名": 6,
+    "該縣市占比": 95.65,
+    "全國占比": 5.31
   },
   {
     "診所名稱": "怡和診所",
@@ -237,19 +278,33 @@
     "區域": "中正區",
     "累積參加人數": 1,
     "累積完成檢查並領蔬果券人數": 0,
+    "檢查_縣市排名": 7,
+    "檢查_全國排名": 38,
+    "完成營養學習人數": 0,
+    "營養_縣市排名": 7,
+    "營養_全國排名": 36,
     "累積完成指標改善並領蔬果券人數": 0,
-    "該縣市占比": 7.69,
-    "全國占比": 0.31
+    "改善_縣市排名": 2,
+    "改善_全國排名": 6,
+    "該縣市占比": 4.0,
+    "全國占比": 0.24
   },
   {
     "診所名稱": "聯合報系員工診療所",
     "縣市": "臺北市",
     "區域": "信義區",
-    "累積參加人數": 4,
-    "累積完成檢查並領蔬果券人數": 4,
+    "累積參加人數": 5,
+    "累積完成檢查並領蔬果券人數": 5,
+    "檢查_縣市排名": 2,
+    "檢查_全國排名": 12,
+    "完成營養學習人數": 4,
+    "營養_縣市排名": 2,
+    "營養_全國排名": 13,
     "累積完成指標改善並領蔬果券人數": 0,
-    "該縣市占比": 30.77,
-    "全國占比": 1.25
+    "改善_縣市排名": 2,
+    "改善_全國排名": 6,
+    "該縣市占比": 20.0,
+    "全國占比": 1.21
   },
   {
     "診所名稱": "台北享新代診所",
@@ -257,9 +312,33 @@
     "區域": "大安區",
     "累積參加人數": 3,
     "累積完成檢查並領蔬果券人數": 1,
+    "檢查_縣市排名": 4,
+    "檢查_全國排名": 24,
+    "完成營養學習人數": 1,
+    "營養_縣市排名": 4,
+    "營養_全國排名": 23,
     "累積完成指標改善並領蔬果券人數": 0,
-    "該縣市占比": 23.08,
-    "全國占比": 0.94
+    "改善_縣市排名": 2,
+    "改善_全國排名": 6,
+    "該縣市占比": 12.0,
+    "全國占比": 0.72
+  },
+  {
+    "診所名稱": "台大醫院北護分院",
+    "縣市": "臺北市",
+    "區域": "萬華區",
+    "累積參加人數": 7,
+    "累積完成檢查並領蔬果券人數": 6,
+    "檢查_縣市排名": 1,
+    "檢查_全國排名": 11,
+    "完成營養學習人數": 5,
+    "營養_縣市排名": 1,
+    "營養_全國排名": 11,
+    "累積完成指標改善並領蔬果券人數": 2,
+    "改善_縣市排名": 1,
+    "改善_全國排名": 1,
+    "該縣市占比": 28.0,
+    "全國占比": 1.69
   },
   {
     "診所名稱": "吳明修診所",
@@ -267,9 +346,16 @@
     "區域": "萬華區",
     "累積參加人數": 3,
     "累積完成檢查並領蔬果券人數": 1,
+    "檢查_縣市排名": 4,
+    "檢查_全國排名": 24,
+    "完成營養學習人數": 1,
+    "營養_縣市排名": 4,
+    "營養_全國排名": 23,
     "累積完成指標改善並領蔬果券人數": 0,
-    "該縣市占比": 23.08,
-    "全國占比": 0.94
+    "改善_縣市排名": 2,
+    "改善_全國排名": 6,
+    "該縣市占比": 12.0,
+    "全國占比": 0.72
   },
   {
     "診所名稱": "漢宗小兒科",
@@ -277,19 +363,33 @@
     "區域": "萬華區",
     "累積參加人數": 1,
     "累積完成檢查並領蔬果券人數": 1,
+    "檢查_縣市排名": 4,
+    "檢查_全國排名": 24,
+    "完成營養學習人數": 1,
+    "營養_縣市排名": 4,
+    "營養_全國排名": 23,
     "累積完成指標改善並領蔬果券人數": 0,
-    "該縣市占比": 7.69,
-    "全國占比": 0.31
+    "改善_縣市排名": 2,
+    "改善_全國排名": 6,
+    "該縣市占比": 4.0,
+    "全國占比": 0.24
   },
   {
     "診所名稱": "萬華衛康內科診所",
     "縣市": "臺北市",
     "區域": "萬華區",
-    "累積參加人數": 1,
-    "累積完成檢查並領蔬果券人數": 1,
+    "累積參加人數": 5,
+    "累積完成檢查並領蔬果券人數": 3,
+    "檢查_縣市排名": 3,
+    "檢查_全國排名": 16,
+    "完成營養學習人數": 3,
+    "營養_縣市排名": 3,
+    "營養_全國排名": 15,
     "累積完成指標改善並領蔬果券人數": 0,
-    "該縣市占比": 7.69,
-    "全國占比": 0.31
+    "改善_縣市排名": 2,
+    "改善_全國排名": 6,
+    "該縣市占比": 20.0,
+    "全國占比": 1.21
   },
   {
     "診所名稱": "安忻診所",
@@ -297,19 +397,33 @@
     "區域": "五股區",
     "累積參加人數": 1,
     "累積完成檢查並領蔬果券人數": 0,
+    "檢查_縣市排名": 7,
+    "檢查_全國排名": 38,
+    "完成營養學習人數": 0,
+    "營養_縣市排名": 8,
+    "營養_全國排名": 36,
     "累積完成指標改善並領蔬果券人數": 0,
-    "該縣市占比": 0.8,
-    "全國占比": 0.31
+    "改善_縣市排名": 3,
+    "改善_全國排名": 6,
+    "該縣市占比": 0.63,
+    "全國占比": 0.24
   },
   {
     "診所名稱": "頂埔中心診所",
     "縣市": "新北市",
     "區域": "土城區",
-    "累積參加人數": 11,
-    "累積完成檢查並領蔬果券人數": 6,
+    "累積參加人數": 24,
+    "累積完成檢查並領蔬果券人數": 23,
+    "檢查_縣市排名": 2,
+    "檢查_全國排名": 4,
+    "完成營養學習人數": 23,
+    "營養_縣市排名": 2,
+    "營養_全國排名": 4,
     "累積完成指標改善並領蔬果券人數": 0,
-    "該縣市占比": 8.8,
-    "全國占比": 3.44
+    "改善_縣市排名": 3,
+    "改善_全國排名": 6,
+    "該縣市占比": 15.19,
+    "全國占比": 5.8
   },
   {
     "診所名稱": "林逢慶診所",
@@ -317,19 +431,50 @@
     "區域": "新店區",
     "累積參加人數": 1,
     "累積完成檢查並領蔬果券人數": 0,
+    "檢查_縣市排名": 7,
+    "檢查_全國排名": 38,
+    "完成營養學習人數": 0,
+    "營養_縣市排名": 8,
+    "營養_全國排名": 36,
     "累積完成指標改善並領蔬果券人數": 0,
-    "該縣市占比": 0.8,
-    "全國占比": 0.31
+    "改善_縣市排名": 3,
+    "改善_全國排名": 6,
+    "該縣市占比": 0.63,
+    "全國占比": 0.24
   },
   {
     "診所名稱": "自立診所",
     "縣市": "新北市",
     "區域": "新莊區",
-    "累積參加人數": 92,
-    "累積完成檢查並領蔬果券人數": 64,
+    "累積參加人數": 101,
+    "累積完成檢查並領蔬果券人數": 73,
+    "檢查_縣市排名": 1,
+    "檢查_全國排名": 1,
+    "完成營養學習人數": 60,
+    "營養_縣市排名": 1,
+    "營養_全國排名": 1,
+    "累積完成指標改善並領蔬果券人數": 2,
+    "改善_縣市排名": 1,
+    "改善_全國排名": 1,
+    "該縣市占比": 63.92,
+    "全國占比": 24.4
+  },
+  {
+    "診所名稱": "衛生福利部臺北醫院",
+    "縣市": "新北市",
+    "區域": "新莊區",
+    "累積參加人數": 2,
+    "累積完成檢查並領蔬果券人數": 2,
+    "檢查_縣市排名": 5,
+    "檢查_全國排名": 19,
+    "完成營養學習人數": 1,
+    "營養_縣市排名": 6,
+    "營養_全國排名": 23,
     "累積完成指標改善並領蔬果券人數": 0,
-    "該縣市占比": 73.6,
-    "全國占比": 28.75
+    "改善_縣市排名": 3,
+    "改善_全國排名": 6,
+    "該縣市占比": 1.27,
+    "全國占比": 0.48
   },
   {
     "診所名稱": "大鈞診所",
@@ -337,9 +482,16 @@
     "區域": "板橋區",
     "累積參加人數": 5,
     "累積完成檢查並領蔬果券人數": 4,
+    "檢查_縣市排名": 4,
+    "檢查_全國排名": 14,
+    "完成營養學習人數": 4,
+    "營養_縣市排名": 4,
+    "營養_全國排名": 13,
     "累積完成指標改善並領蔬果券人數": 0,
-    "該縣市占比": 4.0,
-    "全國占比": 1.56
+    "改善_縣市排名": 3,
+    "改善_全國排名": 6,
+    "該縣市占比": 3.16,
+    "全國占比": 1.21
   },
   {
     "診所名稱": "常春聯合診所",
@@ -347,19 +499,33 @@
     "區域": "板橋區",
     "累積參加人數": 1,
     "累積完成檢查並領蔬果券人數": 0,
+    "檢查_縣市排名": 7,
+    "檢查_全國排名": 38,
+    "完成營養學習人數": 1,
+    "營養_縣市排名": 6,
+    "營養_全國排名": 23,
     "累積完成指標改善並領蔬果券人數": 0,
-    "該縣市占比": 0.8,
-    "全國占比": 0.31
+    "改善_縣市排名": 3,
+    "改善_全國排名": 6,
+    "該縣市占比": 0.63,
+    "全國占比": 0.24
   },
   {
     "診所名稱": "麗暘診所",
     "縣市": "新北市",
     "區域": "板橋區",
-    "累積參加人數": 3,
+    "累積參加人數": 4,
     "累積完成檢查並領蔬果券人數": 2,
+    "檢查_縣市排名": 5,
+    "檢查_全國排名": 19,
+    "完成營養學習人數": 2,
+    "營養_縣市排名": 5,
+    "營養_全國排名": 19,
     "累積完成指標改善並領蔬果券人數": 0,
-    "該縣市占比": 2.4,
-    "全國占比": 0.94
+    "改善_縣市排名": 3,
+    "改善_全國排名": 6,
+    "該縣市占比": 2.53,
+    "全國占比": 0.97
   },
   {
     "診所名稱": "林口微笑內科診所",
@@ -367,39 +533,67 @@
     "區域": "林口區",
     "累積參加人數": 1,
     "累積完成檢查並領蔬果券人數": 0,
+    "檢查_縣市排名": 7,
+    "檢查_全國排名": 38,
+    "完成營養學習人數": 0,
+    "營養_縣市排名": 8,
+    "營養_全國排名": 36,
     "累積完成指標改善並領蔬果券人數": 0,
-    "該縣市占比": 0.8,
-    "全國占比": 0.31
+    "改善_縣市排名": 3,
+    "改善_全國排名": 6,
+    "該縣市占比": 0.63,
+    "全國占比": 0.24
   },
   {
     "診所名稱": "博新小兒科家庭醫學科診所",
     "縣市": "新北市",
     "區域": "永和區",
-    "累積參加人數": 10,
-    "累積完成檢查並領蔬果券人數": 4,
-    "累積完成指標改善並領蔬果券人數": 0,
-    "該縣市占比": 8.0,
-    "全國占比": 3.12
+    "累積參加人數": 18,
+    "累積完成檢查並領蔬果券人數": 16,
+    "檢查_縣市排名": 3,
+    "檢查_全國排名": 6,
+    "完成營養學習人數": 13,
+    "營養_縣市排名": 3,
+    "營養_全國排名": 6,
+    "累積完成指標改善並領蔬果券人數": 2,
+    "改善_縣市排名": 1,
+    "改善_全國排名": 1,
+    "該縣市占比": 11.39,
+    "全國占比": 4.35
   },
   {
     "診所名稱": "森和診所",
     "縣市": "新竹市",
     "區域": "東區",
-    "累積參加人數": 5,
-    "累積完成檢查並領蔬果券人數": 4,
+    "累積參加人數": 13,
+    "累積完成檢查並領蔬果券人數": 8,
+    "檢查_縣市排名": 1,
+    "檢查_全國排名": 9,
+    "完成營養學習人數": 6,
+    "營養_縣市排名": 1,
+    "營養_全國排名": 8,
     "累積完成指標改善並領蔬果券人數": 0,
+    "改善_縣市排名": 1,
+    "改善_全國排名": 6,
     "該縣市占比": 100.0,
-    "全國占比": 1.56
+    "全國占比": 3.14
   },
   {
     "診所名稱": "黃曉生小兒科診所",
     "縣市": "桃園市",
     "區域": "中壢區",
-    "累積參加人數": 28,
-    "累積完成檢查並領蔬果券人數": 26,
+    "累積參加人數": 31,
+    "累積完成檢查並領蔬果券人數": 29,
+    "檢查_縣市排名": 1,
+    "檢查_全國排名": 3,
+    "完成營養學習人數": 27,
+    "營養_縣市排名": 1,
+    "營養_全國排名": 3,
     "累積完成指標改善並領蔬果券人數": 0,
-    "該縣市占比": 90.32,
-    "全國占比": 8.75
+    "改善_縣市排名": 1,
+    "改善_全國排名": 6,
+    "該縣市占比": 88.57,
+    "全國占比": 7.49
   },
   {
     "診所名稱": "心和診所",
@@ -407,9 +601,16 @@
     "區域": "大園區",
     "累積參加人數": 1,
     "累積完成檢查並領蔬果券人數": 0,
+    "檢查_縣市排名": 3,
+    "檢查_全國排名": 38,
+    "完成營養學習人數": 0,
+    "營養_縣市排名": 2,
+    "營養_全國排名": 36,
     "累積完成指標改善並領蔬果券人數": 0,
-    "該縣市占比": 3.23,
-    "全國占比": 0.31
+    "改善_縣市排名": 1,
+    "改善_全國排名": 6,
+    "該縣市占比": 2.86,
+    "全國占比": 0.24
   },
   {
     "診所名稱": "孫德金診所",
@@ -417,19 +618,50 @@
     "區域": "桃園區",
     "累積參加人數": 1,
     "累積完成檢查並領蔬果券人數": 1,
+    "檢查_縣市排名": 2,
+    "檢查_全國排名": 24,
+    "完成營養學習人數": 0,
+    "營養_縣市排名": 2,
+    "營養_全國排名": 36,
     "累積完成指標改善並領蔬果券人數": 0,
-    "該縣市占比": 3.23,
-    "全國占比": 0.31
+    "改善_縣市排名": 1,
+    "改善_全國排名": 6,
+    "該縣市占比": 2.86,
+    "全國占比": 0.24
   },
   {
     "診所名稱": "柯福順耳鼻喉科診所",
     "縣市": "桃園市",
     "區域": "桃園區",
-    "累積參加人數": 1,
+    "累積參加人數": 2,
     "累積完成檢查並領蔬果券人數": 0,
+    "檢查_縣市排名": 3,
+    "檢查_全國排名": 38,
+    "完成營養學習人數": 0,
+    "營養_縣市排名": 2,
+    "營養_全國排名": 36,
     "累積完成指標改善並領蔬果券人數": 0,
-    "該縣市占比": 3.23,
-    "全國占比": 0.31
+    "改善_縣市排名": 1,
+    "改善_全國排名": 6,
+    "該縣市占比": 5.71,
+    "全國占比": 0.48
+  },
+  {
+    "診所名稱": "宏安診所",
+    "縣市": "苗栗縣",
+    "區域": "竹南鎮",
+    "累積參加人數": 1,
+    "累積完成檢查並領蔬果券人數": 1,
+    "檢查_縣市排名": 1,
+    "檢查_全國排名": 24,
+    "完成營養學習人數": 1,
+    "營養_縣市排名": 1,
+    "營養_全國排名": 23,
+    "累積完成指標改善並領蔬果券人數": 0,
+    "改善_縣市排名": 1,
+    "改善_全國排名": 6,
+    "該縣市占比": 100.0,
+    "全國占比": 0.24
   },
   {
     "診所名稱": "蘇晉暉診所",
@@ -437,9 +669,16 @@
     "區域": "南屯區",
     "累積參加人數": 2,
     "累積完成檢查並領蔬果券人數": 2,
+    "檢查_縣市排名": 2,
+    "檢查_全國排名": 19,
+    "完成營養學習人數": 2,
+    "營養_縣市排名": 2,
+    "營養_全國排名": 19,
     "累積完成指標改善並領蔬果券人數": 0,
+    "改善_縣市排名": 1,
+    "改善_全國排名": 6,
     "該縣市占比": 33.33,
-    "全國占比": 0.62
+    "全國占比": 0.48
   },
   {
     "診所名稱": "弘鑫耳鼻喉科診所",
@@ -447,9 +686,16 @@
     "區域": "太平區",
     "累積參加人數": 4,
     "累積完成檢查並領蔬果券人數": 4,
+    "檢查_縣市排名": 1,
+    "檢查_全國排名": 14,
+    "完成營養學習人數": 3,
+    "營養_縣市排名": 1,
+    "營養_全國排名": 15,
     "累積完成指標改善並領蔬果券人數": 0,
+    "改善_縣市排名": 1,
+    "改善_全國排名": 6,
     "該縣市占比": 66.67,
-    "全國占比": 1.25
+    "全國占比": 0.97
   },
   {
     "診所名稱": "陳宏麟診所",
@@ -457,19 +703,33 @@
     "區域": "埔里鎮",
     "累積參加人數": 5,
     "累積完成檢查並領蔬果券人數": 5,
+    "檢查_縣市排名": 2,
+    "檢查_全國排名": 12,
+    "完成營養學習人數": 5,
+    "營養_縣市排名": 2,
+    "營養_全國排名": 11,
     "累積完成指標改善並領蔬果券人數": 0,
-    "該縣市占比": 17.86,
-    "全國占比": 1.56
+    "改善_縣市排名": 1,
+    "改善_全國排名": 6,
+    "該縣市占比": 16.67,
+    "全國占比": 1.21
   },
   {
     "診所名稱": "黎俊奇診所",
     "縣市": "南投縣",
     "區域": "埔里鎮",
-    "累積參加人數": 20,
+    "累積參加人數": 22,
     "累積完成檢查並領蔬果券人數": 9,
+    "檢查_縣市排名": 1,
+    "檢查_全國排名": 8,
+    "完成營養學習人數": 9,
+    "營養_縣市排名": 1,
+    "營養_全國排名": 7,
     "累積完成指標改善並領蔬果券人數": 0,
-    "該縣市占比": 71.43,
-    "全國占比": 6.25
+    "改善_縣市排名": 1,
+    "改善_全國排名": 6,
+    "該縣市占比": 73.33,
+    "全國占比": 5.31
   },
   {
     "診所名稱": "弘仁診所",
@@ -477,9 +737,16 @@
     "區域": "竹山鎮",
     "累積參加人數": 3,
     "累積完成檢查並領蔬果券人數": 3,
+    "檢查_縣市排名": 3,
+    "檢查_全國排名": 16,
+    "完成營養學習人數": 3,
+    "營養_縣市排名": 3,
+    "營養_全國排名": 15,
     "累積完成指標改善並領蔬果券人數": 0,
-    "該縣市占比": 10.71,
-    "全國占比": 0.94
+    "改善_縣市排名": 1,
+    "改善_全國排名": 6,
+    "該縣市占比": 10.0,
+    "全國占比": 0.72
   },
   {
     "診所名稱": "庚新診所",
@@ -487,9 +754,16 @@
     "區域": "和美鎮",
     "累積參加人數": 1,
     "累積完成檢查並領蔬果券人數": 0,
+    "檢查_縣市排名": 5,
+    "檢查_全國排名": 38,
+    "完成營養學習人數": 0,
+    "營養_縣市排名": 4,
+    "營養_全國排名": 36,
     "累積完成指標改善並領蔬果券人數": 0,
-    "該縣市占比": 1.54,
-    "全國占比": 0.31
+    "改善_縣市排名": 2,
+    "改善_全國排名": 6,
+    "該縣市占比": 1.28,
+    "全國占比": 0.24
   },
   {
     "診所名稱": "曾維功診所",
@@ -497,9 +771,16 @@
     "區域": "和美鎮",
     "累積參加人數": 2,
     "累積完成檢查並領蔬果券人數": 1,
+    "檢查_縣市排名": 3,
+    "檢查_全國排名": 24,
+    "完成營養學習人數": 0,
+    "營養_縣市排名": 4,
+    "營養_全國排名": 36,
     "累積完成指標改善並領蔬果券人數": 0,
-    "該縣市占比": 3.08,
-    "全國占比": 0.62
+    "改善_縣市排名": 2,
+    "改善_全國排名": 6,
+    "該縣市占比": 2.56,
+    "全國占比": 0.48
   },
   {
     "診所名稱": "育英診所",
@@ -507,9 +788,16 @@
     "區域": "員林市",
     "累積參加人數": 1,
     "累積完成檢查並領蔬果券人數": 1,
+    "檢查_縣市排名": 3,
+    "檢查_全國排名": 24,
+    "完成營養學習人數": 1,
+    "營養_縣市排名": 3,
+    "營養_全國排名": 23,
     "累積完成指標改善並領蔬果券人數": 0,
-    "該縣市占比": 1.54,
-    "全國占比": 0.31
+    "改善_縣市排名": 2,
+    "改善_全國排名": 6,
+    "該縣市占比": 1.28,
+    "全國占比": 0.24
   },
   {
     "診所名稱": "安怡診所",
@@ -517,19 +805,33 @@
     "區域": "彰化市",
     "累積參加人數": 3,
     "累積完成檢查並領蔬果券人數": 3,
+    "檢查_縣市排名": 2,
+    "檢查_全國排名": 16,
+    "完成營養學習人數": 3,
+    "營養_縣市排名": 2,
+    "營養_全國排名": 15,
     "累積完成指標改善並領蔬果券人數": 0,
-    "該縣市占比": 4.62,
-    "全國占比": 0.94
+    "改善_縣市排名": 2,
+    "改善_全國排名": 6,
+    "該縣市占比": 3.85,
+    "全國占比": 0.72
   },
   {
     "診所名稱": "永安診所",
     "縣市": "彰化縣",
     "區域": "彰化市",
-    "累積參加人數": 58,
-    "累積完成檢查並領蔬果券人數": 51,
-    "累積完成指標改善並領蔬果券人數": 0,
-    "該縣市占比": 89.23,
-    "全國占比": 18.12
+    "累積參加人數": 71,
+    "累積完成檢查並領蔬果券人數": 63,
+    "檢查_縣市排名": 1,
+    "檢查_全國排名": 2,
+    "完成營養學習人數": 42,
+    "營養_縣市排名": 1,
+    "營養_全國排名": 2,
+    "累積完成指標改善並領蔬果券人數": 1,
+    "改善_縣市排名": 1,
+    "改善_全國排名": 4,
+    "該縣市占比": 91.03,
+    "全國占比": 17.15
   },
   {
     "診所名稱": "吳佳錄診所",
@@ -537,9 +839,16 @@
     "區域": "斗六市",
     "累積參加人數": 1,
     "累積完成檢查並領蔬果券人數": 0,
+    "檢查_縣市排名": 1,
+    "檢查_全國排名": 38,
+    "完成營養學習人數": 0,
+    "營養_縣市排名": 1,
+    "營養_全國排名": 36,
     "累積完成指標改善並領蔬果券人數": 0,
+    "改善_縣市排名": 1,
+    "改善_全國排名": 6,
     "該縣市占比": 100.0,
-    "全國占比": 0.31
+    "全國占比": 0.24
   },
   {
     "診所名稱": "王聯合診所(東門王耳鼻喉科)",
@@ -547,9 +856,16 @@
     "區域": "東區",
     "累積參加人數": 2,
     "累積完成檢查並領蔬果券人數": 0,
+    "檢查_縣市排名": 2,
+    "檢查_全國排名": 38,
+    "完成營養學習人數": 0,
+    "營養_縣市排名": 2,
+    "營養_全國排名": 36,
     "累積完成指標改善並領蔬果券人數": 0,
+    "改善_縣市排名": 1,
+    "改善_全國排名": 6,
     "該縣市占比": 66.67,
-    "全國占比": 0.62
+    "全國占比": 0.48
   },
   {
     "診所名稱": "長椿耳鼻喉科診所",
@@ -557,9 +873,16 @@
     "區域": "西區",
     "累積參加人數": 1,
     "累積完成檢查並領蔬果券人數": 1,
+    "檢查_縣市排名": 1,
+    "檢查_全國排名": 24,
+    "完成營養學習人數": 1,
+    "營養_縣市排名": 1,
+    "營養_全國排名": 23,
     "累積完成指標改善並領蔬果券人數": 0,
+    "改善_縣市排名": 1,
+    "改善_全國排名": 6,
     "該縣市占比": 33.33,
-    "全國占比": 0.31
+    "全國占比": 0.24
   },
   {
     "診所名稱": "侯守恩診所",
@@ -567,19 +890,33 @@
     "區域": "朴子市",
     "累積參加人數": 1,
     "累積完成檢查並領蔬果券人數": 1,
+    "檢查_縣市排名": 1,
+    "檢查_全國排名": 24,
+    "完成營養學習人數": 1,
+    "營養_縣市排名": 1,
+    "營養_全國排名": 23,
     "累積完成指標改善並領蔬果券人數": 0,
+    "改善_縣市排名": 1,
+    "改善_全國排名": 6,
     "該縣市占比": 100.0,
-    "全國占比": 0.31
+    "全國占比": 0.24
   },
   {
     "診所名稱": "劉伊薰診所/雨欣診所",
     "縣市": "臺南市",
     "區域": "北區",
-    "累積參加人數": 5,
-    "累積完成檢查並領蔬果券人數": 2,
+    "累積參加人數": 15,
+    "累積完成檢查並領蔬果券人數": 7,
+    "檢查_縣市排名": 2,
+    "檢查_全國排名": 10,
+    "完成營養學習人數": 6,
+    "營養_縣市排名": 1,
+    "營養_全國排名": 8,
     "累積完成指標改善並領蔬果券人數": 0,
-    "該縣市占比": 21.74,
-    "全國占比": 1.56
+    "改善_縣市排名": 1,
+    "改善_全國排名": 6,
+    "該縣市占比": 40.54,
+    "全國占比": 3.62
   },
   {
     "診所名稱": "安康耳鼻喉科診所",
@@ -587,9 +924,16 @@
     "區域": "北區",
     "累積參加人數": 1,
     "累積完成檢查並領蔬果券人數": 1,
+    "檢查_縣市排名": 5,
+    "檢查_全國排名": 24,
+    "完成營養學習人數": 1,
+    "營養_縣市排名": 5,
+    "營養_全國排名": 23,
     "累積完成指標改善並領蔬果券人數": 0,
-    "該縣市占比": 4.35,
-    "全國占比": 0.31
+    "改善_縣市排名": 1,
+    "改善_全國排名": 6,
+    "該縣市占比": 2.7,
+    "全國占比": 0.24
   },
   {
     "診所名稱": "善新診所",
@@ -597,19 +941,33 @@
     "區域": "善化區",
     "累積參加人數": 3,
     "累積完成檢查並領蔬果券人數": 1,
+    "檢查_縣市排名": 5,
+    "檢查_全國排名": 24,
+    "完成營養學習人數": 1,
+    "營養_縣市排名": 5,
+    "營養_全國排名": 23,
     "累積完成指標改善並領蔬果券人數": 0,
-    "該縣市占比": 13.04,
-    "全國占比": 0.94
+    "改善_縣市排名": 1,
+    "改善_全國排名": 6,
+    "該縣市占比": 8.11,
+    "全國占比": 0.72
   },
   {
     "診所名稱": "張耀仁小兒科診所",
     "縣市": "臺南市",
     "區域": "永康區",
-    "累積參加人數": 1,
-    "累積完成檢查並領蔬果券人數": 1,
+    "累積參加人數": 2,
+    "累積完成檢查並領蔬果券人數": 2,
+    "檢查_縣市排名": 3,
+    "檢查_全國排名": 19,
+    "完成營養學習人數": 2,
+    "營養_縣市排名": 3,
+    "營養_全國排名": 19,
     "累積完成指標改善並領蔬果券人數": 0,
-    "該縣市占比": 4.35,
-    "全國占比": 0.31
+    "改善_縣市排名": 1,
+    "改善_全國排名": 6,
+    "該縣市占比": 5.41,
+    "全國占比": 0.48
   },
   {
     "診所名稱": "復華耳鼻喉科診所",
@@ -617,19 +975,33 @@
     "區域": "永康區",
     "累積參加人數": 3,
     "累積完成檢查並領蔬果券人數": 2,
+    "檢查_縣市排名": 3,
+    "檢查_全國排名": 19,
+    "完成營養學習人數": 2,
+    "營養_縣市排名": 3,
+    "營養_全國排名": 19,
     "累積完成指標改善並領蔬果券人數": 0,
-    "該縣市占比": 13.04,
-    "全國占比": 0.94
+    "改善_縣市排名": 1,
+    "改善_全國排名": 6,
+    "該縣市占比": 8.11,
+    "全國占比": 0.72
   },
   {
     "診所名稱": "李俊杰診所",
     "縣市": "臺南市",
     "區域": "永康區",
-    "累積參加人數": 10,
-    "累積完成檢查並領蔬果券人數": 8,
+    "累積參加人數": 13,
+    "累積完成檢查並領蔬果券人數": 10,
+    "檢查_縣市排名": 1,
+    "檢查_全國排名": 7,
+    "完成營養學習人數": 6,
+    "營養_縣市排名": 1,
+    "營養_全國排名": 8,
     "累積完成指標改善並領蔬果券人數": 0,
-    "該縣市占比": 43.48,
-    "全國占比": 3.12
+    "改善_縣市排名": 1,
+    "改善_全國排名": 6,
+    "該縣市占比": 35.14,
+    "全國占比": 3.14
   },
   {
     "診所名稱": "上仁診所",
@@ -637,9 +1009,16 @@
     "區域": "三民區",
     "累積參加人數": 1,
     "累積完成檢查並領蔬果券人數": 1,
+    "檢查_縣市排名": 1,
+    "檢查_全國排名": 24,
+    "完成營養學習人數": 1,
+    "營養_縣市排名": 1,
+    "營養_全國排名": 23,
     "累積完成指標改善並領蔬果券人數": 0,
+    "改善_縣市排名": 1,
+    "改善_全國排名": 6,
     "該縣市占比": 50.0,
-    "全國占比": 0.31
+    "全國占比": 0.24
   },
   {
     "診所名稱": "大政診所",
@@ -647,15 +1026,42 @@
     "區域": "旗山區",
     "累積參加人數": 1,
     "累積完成檢查並領蔬果券人數": 0,
+    "檢查_縣市排名": 2,
+    "檢查_全國排名": 38,
+    "完成營養學習人數": 0,
+    "營養_縣市排名": 2,
+    "營養_全國排名": 36,
     "累積完成指標改善並領蔬果券人數": 0,
+    "改善_縣市排名": 1,
+    "改善_全國排名": 6,
     "該縣市占比": 50.0,
-    "全國占比": 0.31
+    "全國占比": 0.24
+  },
+  {
+    "診所名稱": "三大診所",
+    "縣市": "金門縣",
+    "區域": "金湖鎮",
+    "累積參加人數": 1,
+    "累積完成檢查並領蔬果券人數": 1,
+    "檢查_縣市排名": 1,
+    "檢查_全國排名": 24,
+    "完成營養學習人數": 1,
+    "營養_縣市排名": 1,
+    "營養_全國排名": 23,
+    "累積完成指標改善並領蔬果券人數": 1,
+    "改善_縣市排名": 1,
+    "改善_全國排名": 4,
+    "該縣市占比": 100.0,
+    "全國占比": 0.24
   }
 ];
 
+    document.getElementById("pwd-input")
+      .addEventListener("keydown", e => { if(e.key==="Enter") checkPassword(); });
+
     function checkPassword() {
       const val = document.getElementById("pwd-input").value.trim();
-      if (val === CORRECT_PASSWORD) {
+      if(val === CORRECT_PASSWORD) {
         document.getElementById("login-card").style.display = "none";
         document.getElementById("search-card").style.display = "block";
         setTimeout(() => document.getElementById("clinic-input").focus(), 100);
@@ -665,24 +1071,20 @@
         document.getElementById("pwd-input").focus();
       }
     }
-    document.getElementById("pwd-input")
-      .addEventListener("keydown", e => { if (e.key === "Enter") checkPassword(); });
 
     function searchClinic() {
       document.getElementById("not-found").style.display = "none";
       const query = document.getElementById("clinic-input").value.trim();
-      if (!query) { document.getElementById("clinic-input").focus(); return; }
+      if(!query) { document.getElementById("clinic-input").focus(); return; }
 
-      // 正規化：去空白、小寫
-      const normalize = s => s.replace(/\s/g, "").toLowerCase();
+      const normalize = s => s.replace(/\s/g,"").toLowerCase();
       const q = normalize(query);
       const found = CLINIC_DATA.find(r => {
         const name = normalize(r["診所名稱"] || "");
-        // 完全符合、或診所名稱包含輸入字串、或補「診所」後完全符合
         return name === q || name.includes(q) || name === q + "診所";
       });
 
-      if (!found) {
+      if(!found) {
         document.getElementById("not-found").style.display = "block";
         return;
       }
@@ -694,23 +1096,34 @@
       document.getElementById("result-card").style.display = "block";
 
       document.getElementById("res-name").textContent     = r["診所名稱"] || "—";
-      document.getElementById("res-location").textContent = (r["縣市"] || "") + "　" + (r["區域"] || "");
+      document.getElementById("res-location").textContent = (r["縣市"]||"") + "　" + (r["區域"]||"");
       document.getElementById("res-enrolled").textContent = fmt(r["累積參加人數"]);
       document.getElementById("res-checked").textContent  = fmt(r["累積完成檢查並領蔬果券人數"]);
+      document.getElementById("res-improved").textContent = fmt(r["累積完成指標改善並領蔬果券人數"]);
 
-      // 指標改善 2026 尚未統計
-      document.getElementById("res-improved").textContent = "—";
+      // 排名
+      document.getElementById("rank-check-city").textContent     = "第 " + r["檢查_縣市排名"] + " 名";
+      document.getElementById("rank-check-national").textContent = "第 " + r["檢查_全國排名"] + " 名";
 
-      const cityRatio     = parseFloat(r["該縣市占比"]) || 0;
-      const nationalRatio = parseFloat(r["全國占比"])   || 0;
+      const impCity = r["改善_縣市排名"];
+      const impNat  = r["改善_全國排名"];
+      const impChecked = parseInt(r["累積完成指標改善並領蔬果券人數"]) > 0;
+      document.getElementById("rank-imp-city").textContent     = impChecked ? "第 " + impCity + " 名" : "統計中";
+      document.getElementById("rank-imp-national").textContent = impChecked ? "第 " + impNat  + " 名" : "統計中";
+      document.getElementById("rank-imp-city").className     = "rank-val" + (impChecked ? "" : " na");
+      document.getElementById("rank-imp-national").className = "rank-val" + (impChecked ? "" : " na");
 
-      document.getElementById("res-city-ratio").textContent     = cityRatio.toFixed(2) + "%";
-      document.getElementById("res-national-ratio").textContent = nationalRatio.toFixed(2) + "%";
+      // 營養學習
+      const nutCount = parseInt(r["完成營養學習人數"]) || 0;
+      document.getElementById("res-nutrition").textContent = nutCount > 0 ? nutCount.toLocaleString() : "0";
+      const nutCityR = r["營養_縣市排名"];
+      const nutNatR  = r["營養_全國排名"];
+      document.getElementById("rank-nut-city").textContent     = "第 " + nutCityR + " 名";
+      document.getElementById("rank-nut-national").textContent = "第 " + nutNatR  + " 名";
 
-      setTimeout(() => {
-        document.getElementById("bar-city").style.width     = Math.min(cityRatio, 100)     + "%";
-        document.getElementById("bar-national").style.width = Math.min(nationalRatio * 5, 100) + "%";
-      }, 80);
+      // 占比
+      document.getElementById("res-city-ratio").textContent     = parseFloat(r["該縣市占比"]||0).toFixed(2) + "%";
+      document.getElementById("res-national-ratio").textContent = parseFloat(r["全國占比"]||0).toFixed(2) + "%";
     }
 
     function fmt(v) {
@@ -722,8 +1135,6 @@
       document.getElementById("result-card").style.display = "none";
       document.getElementById("search-card").style.display = "block";
       document.getElementById("clinic-input").value = "";
-      document.getElementById("bar-city").style.width = "0%";
-      document.getElementById("bar-national").style.width = "0%";
       document.getElementById("not-found").style.display = "none";
       document.getElementById("clinic-input").focus();
     }
